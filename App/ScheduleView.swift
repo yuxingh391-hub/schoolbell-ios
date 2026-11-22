@@ -83,10 +83,18 @@ struct ScheduleView: View {
     }
 
     private var sortedEntries: [ScheduleEntry] {
-        store.entries
-            .map { ($0, $0.nextStart ?? .distantFuture) }
-            .sorted { $0.1 == $1.1 ? $0.0.start < $1.0.start : $0.1 < $1.1 }
-            .map { $0.0 }
+        var nextStarts: [UUID: Date] = [:]
+        for entry in store.entries {
+            nextStarts[entry.id] = entry.nextStart
+        }
+        return store.entries.sorted { first, second in
+            let firstTime = nextStarts[first.id] ?? Date.distantFuture
+            let secondTime = nextStarts[second.id] ?? Date.distantFuture
+            if firstTime == secondTime {
+                return first.start < second.start
+            }
+            return firstTime < secondTime
+        }
     }
 
     @ViewBuilder
