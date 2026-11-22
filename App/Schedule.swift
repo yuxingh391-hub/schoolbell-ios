@@ -90,7 +90,7 @@ struct ScheduleEntry: Identifiable, Codable {
         let content = UNMutableNotificationContent()
         content.title = kind == .eyeExercise ? "眼保健操时间" : (isEnd ? "下课铃" : "上课铃")
         content.body = kind == .eyeExercise ? "轻点通知，播放完整版。" : displayTitle
-        content.sound = .named(UNNotificationSoundName(rawValue: isEnd ? "dismissal-bell.wav" : "class-bell.wav"))
+        content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: isEnd ? "dismissal-bell.wav" : "class-bell.wav"))
         content.userInfo["playEyeExercise"] = kind == .eyeExercise
 
         return triggers(at: date).compactMap { trigger in

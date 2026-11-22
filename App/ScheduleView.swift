@@ -109,10 +109,10 @@ struct ScheduleView: View {
     private func scheduleRow(_ entry: ScheduleEntry) -> some View {
         HStack(spacing: 14) {
             VStack(alignment: .leading) {
-                Text(entry.start, format: .dateTime.hour(.twoDigits(amPM: .omitted)).minute(.twoDigits))
+                Text(entry.start, style: .time)
                     .font(.headline.monospacedDigit())
                 if entry.kind == .lesson && entry.hasEnd {
-                    Text(entry.end, format: .dateTime.hour(.twoDigits(amPM: .omitted)).minute(.twoDigits))
+                    Text(entry.end, style: .time)
                         .font(.caption.monospacedDigit())
                         .foregroundStyle(.secondary)
                 }
