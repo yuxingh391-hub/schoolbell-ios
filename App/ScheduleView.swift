@@ -108,28 +108,8 @@ struct ScheduleView: View {
 
     private func scheduleRow(_ entry: ScheduleEntry) -> some View {
         HStack(spacing: 14) {
-            VStack(alignment: .leading) {
-                Text(entry.start, style: .time)
-                    .font(.headline.monospacedDigit())
-                if entry.kind == .lesson && entry.hasEnd {
-                    Text(entry.end, style: .time)
-                        .font(.caption.monospacedDigit())
-                        .foregroundStyle(.secondary)
-                }
-            }
-            .frame(minWidth: 50, alignment: .leading)
-            VStack(alignment: .leading, spacing: 4) {
-                Text(entry.displayTitle).font(.body.weight(.medium))
-                if entry.repetition == .once {
-                    Text(entry.start, format: .dateTime.year().month().day())
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                } else {
-                    Text(entry.repetitionLabel)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-            }
+            scheduleTimes(entry)
+            scheduleDescription(entry)
             Spacer()
             Image(systemName: entry.kind == .eyeExercise ? "eye" : "bell")
                 .foregroundStyle(.secondary)
@@ -137,6 +117,31 @@ struct ScheduleView: View {
         }
         .padding(.vertical, 4)
         .contentShape(Rectangle())
+    }
+
+    private func scheduleTimes(_ entry: ScheduleEntry) -> some View {
+        VStack(alignment: .leading) {
+            Text(entry.start, style: .time)
+                .font(.headline)
+                .monospacedDigit()
+            if entry.kind == .lesson && entry.hasEnd {
+                Text(entry.end, style: .time)
+                    .font(.caption)
+                    .monospacedDigit()
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .frame(minWidth: 50, alignment: .leading)
+    }
+
+    private func scheduleDescription(_ entry: ScheduleEntry) -> some View {
+        let detail = entry.repetition == .once
+            ? Text(entry.start, style: .date)
+            : Text(entry.repetitionLabel)
+        return VStack(alignment: .leading, spacing: 4) {
+            Text(entry.displayTitle).fontWeight(.medium)
+            detail.font(.caption).foregroundStyle(.secondary)
+        }
     }
 
     private var errorBinding: Binding<Bool> {
